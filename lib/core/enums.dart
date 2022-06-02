@@ -1,3 +1,10 @@
+enum StateStatus {
+  initial,
+  loading,
+  failure,
+  successful,
+}
+
 enum AccountType {
   customer,
   driver,

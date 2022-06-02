@@ -9,6 +9,7 @@ class EntryField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final bool obscureText;
   final String? errorText;
+  final String? initialValue;
   EntryField({
     this.controller,
     this.hintText = '',
@@ -16,11 +17,13 @@ class EntryField extends StatelessWidget {
     this.onChanged,
     this.obscureText = false,
     this.errorText,
+    this.initialValue,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       controller: controller,
       onChanged: onChanged,
       cursorColor: kMainColor,

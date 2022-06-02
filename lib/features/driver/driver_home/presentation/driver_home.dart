@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:handover/features/auth/login/presentation/login_screen.dart';
+import 'package:handover/features/auth/logout/cubit/logout_cubit.dart';
 import 'package:handover/features/driver/driver_home/presentation/widgets/order_widger.dart';
+import 'package:handover/utils/app_dialogs.dart';
 import 'package:sizer/sizer.dart';
 import '../../../../core/constants.dart';
 
@@ -14,8 +18,19 @@ class DriverHomeScreen extends StatelessWidget {
           title: Text('Handover (Driver)'),
           actions: [
             IconButton(
-              onPressed: () {},
               icon: Icon(Icons.logout),
+              onPressed: () async {
+                AppDialogs.showLoading();
+                await context.read<LogoutCubit>().logout();
+                AppDialogs.dismissLoading();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginScreen(),
+                  ),
+                  (route) => false,
+                );
+              },
             )
           ],
         ),

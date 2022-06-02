@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "91075568993",
+    "project_id": "handover-senjab",
+    "storage_bucket": "handover-senjab.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:91075568993:android:0c8eb6a6a6b30726dbd120",
+        "android_client_info": {
+          "package_name": "com.example.handover"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "91075568993-r340ctb4d1o4kqnt0ejg0s2r68houumm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAi3IGgPSrLiPg7v2MZdDBxo5Y85euQ8Cg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "91075568993-r340ctb4d1o4kqnt0ejg0s2r68houumm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
