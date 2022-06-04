@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:handover/core/constants.dart';
+import 'package:handover/core/helpers/round_double.dart';
 import 'package:sizer/sizer.dart';
 
 class OrderWidget extends StatelessWidget {
-  final String customerName;
-  final double distanceByKilometers;
+  final String productName;
+  final double? distanceByKilometers;
 
   OrderWidget({
-    required this.customerName,
+    required this.productName,
     required this.distanceByKilometers,
   });
 
@@ -27,11 +28,13 @@ class OrderWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            customerName,
+            productName,
             style: _textStyle,
           ),
           Text(
-            distanceByKilometers.toString() + ' Km',
+            distanceByKilometers == null
+                ? '-- Km'
+                : '${roundDouble(distanceByKilometers!, 2)}  Km',
             style: _textStyle,
           ),
         ],

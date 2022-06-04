@@ -55,6 +55,28 @@ class AppDialogs {
     );
   }
 
+  static Future<void> showCustomContainerAsAlert({
+    required BuildContext context,
+    required Container container,
+    bool dismissible = true,
+  }) {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: dismissible,
+      builder: (BuildContext context) {
+        return WillPopScope(
+          onWillPop: () async => dismissible,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              container,
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   static showLoading() {
     EasyLoading.show(status: 'Loading...', maskType: EasyLoadingMaskType.black);
   }

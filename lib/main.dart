@@ -9,6 +9,7 @@ import 'package:handover/features/auth/login/presentation/login_screen.dart';
 import 'package:handover/features/auth/user_data/user_data_cubit.dart';
 import 'package:handover/features/home_gate/presentation/home_gate.dart';
 import 'package:handover/repositories/auth_repository/auth_repository.dart';
+import 'package:handover/repositories/orders_repository/src/orders_repository.dart';
 import 'package:handover/repositories/user_data_repository/user_data_repository.dart';
 import 'package:sizer/sizer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,6 +33,9 @@ void main() async {
           ),
           RepositoryProvider<UserDataRepository>(
             create: (context) => UserDataRepository(),
+          ),
+          RepositoryProvider<OrdersRepository>(
+            create: (context) => OrdersRepository(),
           ),
         ],
         child: MultiBlocProvider(

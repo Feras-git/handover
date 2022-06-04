@@ -16,3 +16,8 @@ enum OrderStatus {
   nearDeliveryDestination,
   deliveredPackage,
 }
+
+enum DistanceUnit {
+  meters,
+  kilometers,
+}
