@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:handover/core/enums.dart';
@@ -46,6 +47,7 @@ class DriverCubit extends Cubit<DriverState> {
         driverLocation: location,
       ));
     } catch (error) {
+      print(error);
       emit(state.copyWith(
         stateStatus: StateStatus.failure,
         errorMessage: 'Failed to fetch driver\'s location!',
@@ -54,7 +56,7 @@ class DriverCubit extends Cubit<DriverState> {
   }
 
   Stream<List<Order>> ordersStream() {
-    return ordersRepository.ordersWaitingForPickUpStream();
+    return ordersRepository.pendingOrdersStream();
   }
 
   /// Distance from driver's current location to order's customer destination
@@ -73,5 +75,38 @@ class DriverCubit extends Cubit<DriverState> {
       return unit == DistanceUnit.meters ? distance : distance / 1000;
     }
     return null;
+  }
+
+  Future serveOrder({required Order order}) async {
+    emit(state.copyWith(
+      stateStatus: StateStatus.loading,
+    ));
+
+    try {
+      Order pickedOrder = await ordersRepository.serveOrder(
+        driverId: userDataCubit.state.userData!.id,
+        driverLocation: await Geolocator.getCurrentPosition()
+            .then((value) => GeoPoint(value.latitude, value.longitude)),
+        order: order,
+      );
+
+      emit(state.copyWith(
+        currentOrder: pickedOrder,
+        stateStatus: StateStatus.successful,
+      ));
+    } catch (error) {
+      print(error);
+      emit(state.copyWith(
+        stateStatus: StateStatus.failure,
+        errorMessage: 'Failed to pick up order!',
+      ));
+    }
+  }
+
+  /// If the order updated (during delivery), call to update the state
+  setCurrentOrder({required Order updatedOrder}) {
+    emit(state.copyWith(
+      currentOrder: updatedOrder,
+    ));
   }
 }

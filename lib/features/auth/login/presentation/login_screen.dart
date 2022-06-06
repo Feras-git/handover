@@ -140,6 +140,7 @@ class _LoginScreenState extends State<LoginScreen>
                         child: CustomButton(
                           text: 'Login',
                           onPressed: () async {
+                            FocusScope.of(context).requestFocus(FocusNode());
                             if (AuthValidator.isEmailValid(state.email) &&
                                 AuthValidator.isPasswordValid(state.password)) {
                               await context.read<LoginCubit>().login();

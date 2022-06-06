@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:handover/core/constants.dart';
 import 'package:handover/core/enums.dart';
 import 'package:handover/core/models/product.dart';
 import 'package:handover/features/auth/user_data/user_data_cubit.dart';
@@ -48,6 +49,10 @@ class CustomerCubit extends Cubit<CustomerState> {
     try {
       Order newOrder = await ordersRepository.addNewOrder(
         order: Order(
+          pickUpLocation: GeoPoint(
+            kPickUpPosition.latitude,
+            kPickUpPosition.longitude,
+          ),
           productName: product.name,
           totalPrice: product.price,
           customerId: userDataCubit.state.userData!.id,

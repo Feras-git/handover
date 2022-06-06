@@ -3,10 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:handover/config/map_markers_icons.dart';
 import 'package:handover/config/simple_bloc_observer.dart';
 import 'package:handover/core/constants.dart';
 import 'package:handover/features/auth/login/presentation/login_screen.dart';
 import 'package:handover/features/auth/user_data/user_data_cubit.dart';
+import 'package:handover/features/customer/customer_home/cubit/customer_cubit.dart';
+import 'package:handover/features/driver/driver_home/cubit/driver_cubit.dart';
 import 'package:handover/features/home_gate/presentation/home_gate.dart';
 import 'package:handover/repositories/auth_repository/auth_repository.dart';
 import 'package:handover/repositories/orders_repository/src/orders_repository.dart';
@@ -20,7 +23,11 @@ import 'features/auth/logout/cubit/logout_cubit.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp();
+  await Future.wait([
+    Firebase.initializeApp(),
+    MapMarkersIcons.configure(),
+  ]);
+
   EquatableConfig.stringify = kDebugMode;
   Bloc.observer = SimpleBlocObserver();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
@@ -56,6 +63,18 @@ void main() async {
                   authRepository: context.read<AuthRepository>(),
                   authBloc: context.read<AuthBloc>(),
                   userDataRepository: context.read<UserDataRepository>()),
+            ),
+            BlocProvider(
+              create: (BuildContext context) => CustomerCubit(
+                userDataCubit: context.read<UserDataCubit>(),
+                ordersRepository: context.read<OrdersRepository>(),
+              ),
+            ),
+            BlocProvider(
+              create: (BuildContext context) => DriverCubit(
+                userDataCubit: context.read<UserDataCubit>(),
+                ordersRepository: context.read<OrdersRepository>(),
+              ),
             ),
           ],
           child: MyApp(),

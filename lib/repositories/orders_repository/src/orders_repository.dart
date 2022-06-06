@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:handover/core/enums.dart';
 import 'package:handover/repositories/orders_repository/src/models/models.dart';
 
 class OrdersRepository {
@@ -40,9 +41,25 @@ class OrdersRepository {
         .distinct();
   }
 
-  /// List of orders that are waiting for driver to pick up.
-  Stream<List<Order>> ordersWaitingForPickUpStream() {
-    var query = _ordersCollection.where('isPickedUp', isEqualTo: false);
+  /// Update driver's location in database
+  ///
+  /// Returns the updated order
+  Future<Order> updateDriverLocation({
+    required Order order,
+    required GeoPoint driverLocation,
+  }) async {
+    await _ordersCollection.doc(order.orderId).update({
+      'driverLocation': driverLocation,
+    });
+
+    return order.copyWith(
+      driverLocation: driverLocation,
+    );
+  }
+
+  /// List of orders that are waiting for driver to serve
+  Stream<List<Order>> pendingOrdersStream() {
+    var query = _ordersCollection.where('isPending', isEqualTo: true);
 
     return query.snapshots().map((snap) {
       List<Order> result = snap.docs.map((doc) {
@@ -53,33 +70,91 @@ class OrdersRepository {
     });
   }
 
-  /// A driver picks up an order.
+  /// A driver get responsibility of an order.
   ///
   /// The function updates order's necessary data in database.
-  Future pickUpOrder({
+  ///
+  /// returns the updated order.
+  Future<Order> serveOrder({
     required driverId,
     required GeoPoint driverLocation,
     required Order order,
   }) async {
-    var pickedOrder = order.copyWith(
+    var servedOrder = order.copyWith(
       driverId: driverId,
-      isPickedUp: true,
+      isPending: false,
       driverLocation: driverLocation,
-      pickUpTime: DateTime.now(),
+      startTime: DateTime.now(),
+      orderStatus: OrderStatus.onTheWay,
     );
-    await _ordersCollection.doc(order.orderId).update(pickedOrder.toJson());
+    await _ordersCollection.doc(order.orderId).update(servedOrder.toJson());
+
+    return servedOrder;
+  }
+
+  /// A driver reached near to the pick up destination.
+  ///
+  /// The function updates order's necessary data in database.
+  ///
+  /// returns the updated order.
+  Future<Order> nearToPickUp({required Order order}) async {
+    var nearOrder = order.copyWith(
+      isNearToPickUp: true,
+    );
+
+    await _ordersCollection.doc(order.orderId).update(nearOrder.toJson());
+
+    return nearOrder;
+  }
+
+  /// A driver arrived pickup destination and will pick up the order.
+  ///
+  /// The function updates order's necessary data in database.
+  ///
+  /// returns the updated order.
+  Future<Order> pickUpOrder({required Order order}) async {
+    var pickedUpOrder = order.copyWith(
+      pickUpTime: DateTime.now(),
+      isPickedUp: true,
+      orderStatus: OrderStatus.pickedUpDelivery,
+    );
+
+    await _ordersCollection.doc(order.orderId).update(pickedUpOrder.toJson());
+
+    return pickedUpOrder;
+  }
+
+  /// A driver reached near to the destination of the customer.
+  ///
+  /// The function updates order's necessary data in database.
+  ///
+  /// returns the updated order.
+  Future<Order> nearToCustomer({required Order order}) async {
+    var nearOrder = order.copyWith(
+      isNearToCustomer: true,
+      orderStatus: OrderStatus.nearDeliveryDestination,
+    );
+
+    await _ordersCollection.doc(order.orderId).update(nearOrder.toJson());
+
+    return nearOrder;
   }
 
   /// A driver delivered the order to customer.
   ///
   /// The function updates order's necessary data in database.
-  Future deliverOrder({required Order order}) async {
+  ///
+  /// returns the updated order.
+  Future<Order> deliveredOrder({required Order order}) async {
     var deliveredOrder = order.copyWith(
       deliveryTime: DateTime.now(),
       isDelivered: true,
+      orderStatus: OrderStatus.deliveredPackage,
     );
 
     await _ordersCollection.doc(order.orderId).update(deliveredOrder.toJson());
+
+    return deliveredOrder;
   }
 
   /// Get current order for the user, Or Null if the user has no current order

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
+import 'package:handover/core/enums.dart';
+
 class Order extends Equatable {
   /// The id of the order
   final String? orderId;
@@ -14,11 +16,26 @@ class Order extends Equatable {
   /// The userId of the driver who picked up the package
   final String? driverId;
 
+  /// The current status of the order
+  final OrderStatus? orderStatus;
+
   /// The location of customer
   final GeoPoint customerLocation;
 
+  /// The location of pickup
+  final GeoPoint pickUpLocation;
+
   /// The live location of driver
   final GeoPoint? driverLocation;
+
+  /// The order is on wait list looking for driver to serve it
+  final bool isPending;
+
+  /// The driver is near to the pick up destination
+  final bool isNearToPickUp;
+
+  /// The driver is near to the customer destination
+  final bool isNearToCustomer;
 
   /// The package is picked up by driver and went to delivery
   final bool isPickedUp;
@@ -31,6 +48,9 @@ class Order extends Equatable {
 
   /// The time when the customer ordered the package
   final DateTime orderTime;
+
+  /// The time when the driver start the journey
+  final DateTime? startTime;
 
   /// The time when the driver picked up the package to delivery
   final DateTime? pickUpTime;
@@ -49,12 +69,18 @@ class Order extends Equatable {
     required this.productName,
     required this.customerId,
     this.driverId,
+    this.orderStatus,
     required this.customerLocation,
+    required this.pickUpLocation,
     this.driverLocation,
+    this.isPending = true,
+    this.isNearToPickUp = false,
+    this.isNearToCustomer = false,
     this.isPickedUp = false,
     this.isDelivered = false,
     this.isReceived = false,
     required this.orderTime,
+    this.startTime,
     this.pickUpTime,
     this.deliveryTime,
     required this.totalPrice,
@@ -66,12 +92,18 @@ class Order extends Equatable {
     String? productName,
     String? customerId,
     String? driverId,
+    OrderStatus? orderStatus,
     GeoPoint? customerLocation,
+    GeoPoint? pickUpLocation,
     GeoPoint? driverLocation,
+    bool? isPending,
+    bool? isNearToPickUp,
+    bool? isNearToCustomer,
     bool? isPickedUp,
     bool? isDelivered,
     bool? isReceived,
     DateTime? orderTime,
+    DateTime? startTime,
     DateTime? pickUpTime,
     DateTime? deliveryTime,
     double? totalPrice,
@@ -82,12 +114,18 @@ class Order extends Equatable {
       productName: productName ?? this.productName,
       customerId: customerId ?? this.customerId,
       driverId: driverId ?? this.driverId,
+      orderStatus: orderStatus ?? this.orderStatus,
       customerLocation: customerLocation ?? this.customerLocation,
+      pickUpLocation: pickUpLocation ?? this.pickUpLocation,
       driverLocation: driverLocation ?? this.driverLocation,
+      isPending: isPending ?? this.isPending,
+      isNearToPickUp: isNearToPickUp ?? this.isNearToPickUp,
+      isNearToCustomer: isNearToCustomer ?? this.isNearToCustomer,
       isPickedUp: isPickedUp ?? this.isPickedUp,
       isDelivered: isDelivered ?? this.isDelivered,
       isReceived: isReceived ?? this.isReceived,
       orderTime: orderTime ?? this.orderTime,
+      startTime: startTime ?? this.startTime,
       pickUpTime: pickUpTime ?? this.pickUpTime,
       deliveryTime: deliveryTime ?? this.deliveryTime,
       totalPrice: totalPrice ?? this.totalPrice,
@@ -102,12 +140,18 @@ class Order extends Equatable {
       productName,
       customerId,
       driverId,
+      orderStatus,
       customerLocation,
+      pickUpLocation,
       driverLocation,
+      isPending,
+      isNearToPickUp,
+      isNearToCustomer,
       isPickedUp,
       isDelivered,
       isReceived,
       orderTime,
+      startTime,
       pickUpTime,
       deliveryTime,
       totalPrice,
@@ -120,12 +164,18 @@ class Order extends Equatable {
       'productName': productName,
       'customerId': customerId,
       'driverId': driverId,
+      'orderStatus': orderStatus?.name,
       'customerLocation': customerLocation,
+      'pickUpLocation': pickUpLocation,
       'driverLocation': driverLocation,
+      'isPending': isPending,
+      'isNearToPickUp': isNearToPickUp,
+      'isNearToCustomer': isNearToCustomer,
       'isPickedUp': isPickedUp,
       'isDelivered': isDelivered,
       'isReceived': isReceived,
       'orderTime': orderTime,
+      'startTime': startTime,
       'pickUpTime': pickUpTime,
       'deliveryTime': deliveryTime,
       'totalPrice': totalPrice,
@@ -139,12 +189,23 @@ class Order extends Equatable {
       productName: map['productName'],
       customerId: map['customerId'] ?? '',
       driverId: map['driverId'],
+      orderStatus: map['orderStatus'] == null
+          ? null
+          : OrderStatus.values
+              .firstWhere((value) => value.name == map['orderStatus']),
       customerLocation: map['customerLocation'],
+      pickUpLocation: map['pickUpLocation'],
       driverLocation: map['driverLocation'],
+      isPending: map['isPending'],
+      isNearToPickUp: map['isNearToPickUp'],
+      isNearToCustomer: map['isNearToCustomer'],
       isPickedUp: map['isPickedUp'],
       isDelivered: map['isDelivered'],
       isReceived: map['isReceived'],
       orderTime: DateTime.parse(map['orderTime'].toDate().toString()),
+      startTime: map['startTime'] == null
+          ? null
+          : DateTime.parse(map['startTime'].toDate().toString()),
       pickUpTime: map['pickUpTime'] == null
           ? null
           : DateTime.parse(map['pickUpTime'].toDate().toString()),

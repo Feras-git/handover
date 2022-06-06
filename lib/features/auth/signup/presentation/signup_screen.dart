@@ -198,6 +198,7 @@ class _SignupScreenState extends State<SignupScreen>
                         child: CustomButton(
                           text: 'Register',
                           onPressed: () async {
+                            FocusScope.of(context).requestFocus(FocusNode());
                             if (AuthValidator.isFullNameValid(state.fullName) &&
                                 AuthValidator.isEmailValid(state.email) &&
                                 AuthValidator.isPasswordValid(state.password)) {
