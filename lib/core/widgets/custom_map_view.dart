@@ -75,7 +75,7 @@ class _CustomMapViewState extends State<CustomMapView> {
             draggable: false,
             flat: true,
             anchor: Offset(0.5, 0.5),
-            icon: MapMarkersIcons.locationCircleMarkerIcon,
+            icon: MapMarkersIcons.deliveryMarkerIcon,
           ),
         // live location circle marker
         if (widget.userLivePosition != null)

@@ -9,6 +9,7 @@ import 'package:handover/features/auth/login/presentation/login_screen.dart';
 import 'package:handover/features/auth/logout/cubit/logout_cubit.dart';
 import 'package:handover/features/customer/customer_home/cubit/customer_cubit.dart';
 import 'package:handover/features/customer/customer_home/presentation/widgets/select_product_widget.dart';
+import 'package:handover/features/customer/tracking/presentation/tracking_screen.dart';
 import 'package:handover/utils/app_dialogs.dart';
 import 'package:sizer/sizer.dart';
 
@@ -46,7 +47,6 @@ class CustomerHomeScreen extends StatelessWidget {
             } else {
               AppDialogs.dismissLoading();
               if (state.stateStatus == StateStatus.failure) {
-                //TODO deal with failure
                 AppDialogs.showCustomAlert(
                     context: context,
                     title: 'Error',
@@ -55,12 +55,14 @@ class CustomerHomeScreen extends StatelessWidget {
             }
           },
           builder: (context, state) {
+            bool _hasCurrentOrder =
+                state.currentOrder != null && !state.currentOrder!.isReceived;
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Visibility(
-                    visible: state.currentOrder == null,
+                    visible: !_hasCurrentOrder,
                     child: Column(
                       children: [
                         Text(
@@ -84,11 +86,11 @@ class CustomerHomeScreen extends StatelessWidget {
                     ),
                   ),
                   CustomButton(
-                    text: state.currentOrder == null
+                    text: !_hasCurrentOrder
                         ? '  Get my package to my location  '
                         : ' You already have an order, track it! ',
                     onPressed: () async {
-                      if (state.currentOrder == null) {
+                      if (!_hasCurrentOrder) {
                         if (_selectedProduct == null) {
                           AppDialogs.showCustomAlert(
                               context: context,
@@ -102,12 +104,16 @@ class CustomerHomeScreen extends StatelessWidget {
                               )
                               .then((_) {
                             if (state.stateStatus == StateStatus.successful) {
-                              //TODO
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => TrackingScreen(),
+                              ));
                             }
                           });
                         }
                       } else {
-                        //TODO
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => TrackingScreen(),
+                        ));
                       }
                     },
                   ),

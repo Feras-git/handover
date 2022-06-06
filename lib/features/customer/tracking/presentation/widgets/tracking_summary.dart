@@ -7,8 +7,8 @@ class TrackingSummary extends StatelessWidget {
   final int initialRating;
   final Function onRatingUpdate;
   final Color ratingStarsColor;
-  final TimeOfDay pickupTime;
-  final TimeOfDay deliveryTime;
+  final TimeOfDay? pickupTime;
+  final TimeOfDay? deliveryTime;
   final double totalPrice;
   final Function onSubmit;
 
@@ -145,7 +145,7 @@ class _SubmitButton extends StatelessWidget {
 
 class _TimingInfoRow extends StatelessWidget {
   final String infoText;
-  final TimeOfDay infoTime;
+  final TimeOfDay? infoTime;
 
   const _TimingInfoRow({
     required this.infoText,
@@ -162,7 +162,7 @@ class _TimingInfoRow extends StatelessWidget {
         ),
         Spacer(),
         Text(
-          infoTime.format(context),
+          infoTime == null ? '--:--' : infoTime!.format(context),
         ),
       ],
     );

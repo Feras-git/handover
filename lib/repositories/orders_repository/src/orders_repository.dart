@@ -22,14 +22,32 @@ class OrdersRepository {
         .then((doc) => Order.fromJson(doc.id, doc.data() as Map));
   }
 
-  /// Insert service rating for order to database.
-  Future rateOrder({
-    required String orderId,
+  /// Tracking changes of order document
+  Stream<Order> orderStream({required String orderId}) {
+    return _ordersCollection.doc(orderId).snapshots().map((doc) {
+      return Order.fromJson(orderId, doc.data()!);
+    }).distinct();
+  }
+
+  /// The customer recieved the package successfully.
+  ///
+  /// Submit summary providing [rating] of service.
+  ///
+  /// The function updates necessary data in database.
+  ///
+  /// Returns the updated order.
+  Future<Order> submitSummary({
+    required Order order,
     required double rating,
   }) async {
-    await _ordersCollection.doc(orderId).update({
-      'rating': rating,
-    });
+    Order updatedOrder = order.copyWith(
+      rating: rating,
+      isReceived: true,
+    );
+
+    await _ordersCollection.doc(order.orderId).update(updatedOrder.toJson());
+
+    return updatedOrder;
   }
 
   /// Live tracking of driver's location for an order.

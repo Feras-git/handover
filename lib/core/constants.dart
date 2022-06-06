@@ -11,3 +11,4 @@ const Color kMainColor = Color(0xffFBAF02);
 const String kDefaultAvatarPath = 'assets/images/default_avatar.jpg';
 const String kLocationCircleImagePath = 'assets/images/location_circle.png';
 const String kDeliveryImagePath = 'assets/images/delivery.png';
+const String kWaitingImagePath = 'assets/images/waiting.gif';

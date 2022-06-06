@@ -74,4 +74,11 @@ class CustomerCubit extends Cubit<CustomerState> {
       ));
     }
   }
+
+  /// Call after order recieved (summary submitted) to update current order
+  void orderIsRecieved({required Order recievedOrder}) {
+    emit(state.copyWith(
+      currentOrder: recievedOrder,
+    ));
+  }
 }

@@ -48,7 +48,6 @@ class DriverHomeScreen extends StatelessWidget {
               } else {
                 AppDialogs.dismissLoading();
                 if (state.stateStatus == StateStatus.failure) {
-                  //TODO deal with failure
                   AppDialogs.showCustomAlert(
                       context: context,
                       title: 'Error',

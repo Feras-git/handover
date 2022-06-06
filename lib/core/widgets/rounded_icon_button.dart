@@ -5,17 +5,19 @@ import 'package:sizer/sizer.dart';
 class RoundedIconButton extends StatelessWidget {
   final IconData icon;
   final Function onTap;
+  final Color backgroundColor;
 
   RoundedIconButton({
     required this.icon,
     required this.onTap,
+    this.backgroundColor = kMainColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return ClipOval(
       child: Material(
-        color: kMainColor,
+        color: backgroundColor,
         child: InkWell(
           splashColor: Colors.white,
           onTap: () => onTap(),
