@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:handover/config/map_markers_icons.dart';
+import 'package:handover/config/push_notifications_manager.dart';
 import 'package:handover/config/simple_bloc_observer.dart';
 import 'package:handover/core/constants.dart';
 import 'package:handover/features/auth/login/presentation/login_screen.dart';
@@ -89,6 +90,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    PushNotificationsManager.init();
     return Sizer(
       builder: (context, orientation, deviceType) {
         return MaterialApp(

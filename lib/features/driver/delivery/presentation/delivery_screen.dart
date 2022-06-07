@@ -9,6 +9,7 @@ import 'package:handover/features/driver/driver_home/cubit/driver_cubit.dart';
 import 'package:handover/features/driver/delivery/cubit/delivery_cubit.dart';
 import 'package:handover/core/widgets/rounded_icon_button.dart';
 import 'package:handover/repositories/orders_repository/orders_repository.dart';
+import 'package:handover/repositories/user_data_repository/user_data_repository.dart';
 import 'package:handover/utils/app_dialogs.dart';
 
 class DeliveryScreen extends StatelessWidget {
@@ -20,6 +21,7 @@ class DeliveryScreen extends StatelessWidget {
       create: (context) => DeliveryCubit(
         driverCubit: context.read<DriverCubit>(),
         ordersRepository: context.read<OrdersRepository>(),
+        userDataRepository: context.read<UserDataRepository>(),
       ),
       child: Scaffold(
         appBar: AppBar(

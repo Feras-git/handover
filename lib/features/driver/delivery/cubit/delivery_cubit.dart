@@ -4,8 +4,10 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:handover/config/push_notifications_manager.dart';
 import 'package:handover/features/driver/driver_home/cubit/driver_cubit.dart';
 import 'package:handover/repositories/orders_repository/orders_repository.dart';
+import 'package:handover/repositories/user_data_repository/src/user_data_repository.dart';
 
 part 'delivery_state.dart';
 
@@ -13,6 +15,7 @@ class DeliveryCubit extends Cubit<DeliveryState> {
   DeliveryCubit({
     required this.ordersRepository,
     required this.driverCubit,
+    required this.userDataRepository,
   }) : super(DeliveryState(
           driverLiveLocation: driverCubit.state.driverLocation!,
         )) {
@@ -21,6 +24,7 @@ class DeliveryCubit extends Cubit<DeliveryState> {
 
   final OrdersRepository ordersRepository;
   final DriverCubit driverCubit;
+  final UserDataRepository userDataRepository;
 
   StreamSubscription? _locationStreamSub;
 
@@ -79,8 +83,12 @@ class DeliveryCubit extends Cubit<DeliveryState> {
             await ordersRepository.nearToPickUp(order: currentOrder);
         // Update locally
         driverCubit.setCurrentOrder(updatedOrder: updatedOrder);
-        // TODO Notification (driver near to pick up)
         //! Send notification (driver near to pick up)
+        _sendNotificationToCustomer(
+          title: 'Near to pick up area',
+          body:
+              'The driver is near to pick up area and will carry your package very soon.',
+        );
       }
     } else if (!currentOrder.isPickedUp) {
       // Driver arrived pick up
@@ -90,8 +98,12 @@ class DeliveryCubit extends Cubit<DeliveryState> {
             await ordersRepository.pickUpOrder(order: currentOrder);
         // Update locally
         driverCubit.setCurrentOrder(updatedOrder: updatedOrder);
-        // TODO Notification (driver arrived pick up)
         //! Send notification (driver arrived pick up)
+        _sendNotificationToCustomer(
+          title: 'Arrived the pick up area',
+          body:
+              'The driver arrived the pick up area and is picking your package.',
+        );
       }
     }
   }
@@ -115,8 +127,12 @@ class DeliveryCubit extends Cubit<DeliveryState> {
             await ordersRepository.nearToCustomer(order: currentOrder);
         // Update locally
         driverCubit.setCurrentOrder(updatedOrder: updatedOrder);
-        // TODO Notification (driver near to customer)
         //! Send notification (driver near to customer)
+        _sendNotificationToCustomer(
+          title: 'Near to your destination',
+          body:
+              'The driver is near to your destination and will arrive with the package very soon.',
+        );
       }
     } else if (!currentOrder.isDelivered) {
       // Driver arrived to customer
@@ -126,10 +142,28 @@ class DeliveryCubit extends Cubit<DeliveryState> {
             await ordersRepository.deliveredOrder(order: currentOrder);
         // Update locally
         driverCubit.setCurrentOrder(updatedOrder: updatedOrder);
-        // TODO Notification (driver arrived to customer)
         //! Send notification (driver arrived to customer)
+        _sendNotificationToCustomer(
+          title: 'Arrived to your destination',
+          body: 'The driver arrived to your destination.',
+        );
       }
     }
+  }
+
+  _sendNotificationToCustomer({
+    required String title,
+    required String body,
+  }) {
+    userDataRepository
+        .getUserTokens(userId: driverCubit.state.currentOrder!.customerId)
+        .then((tokens) {
+      PushNotificationsManager.sendNotification(
+        recieverTokens: tokens,
+        title: title,
+        body: body,
+      );
+    });
   }
 
   @override

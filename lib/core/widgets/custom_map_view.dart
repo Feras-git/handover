@@ -58,14 +58,12 @@ class _CustomMapViewState extends State<CustomMapView> {
           markerId: MarkerId('pickUpMarker'),
           position: widget.pickupPosition,
           draggable: false,
-          flat: true,
         ),
         // Customer position marker
         Marker(
           markerId: MarkerId('customerMarker'),
           position: widget.customerPosition,
           draggable: false,
-          flat: true,
         ),
         // delivery (driver) marker
         if (widget.driverPosition != null)
@@ -73,7 +71,6 @@ class _CustomMapViewState extends State<CustomMapView> {
             markerId: MarkerId('driverMarker'),
             position: widget.driverPosition!,
             draggable: false,
-            flat: true,
             anchor: Offset(0.5, 0.5),
             icon: MapMarkersIcons.deliveryMarkerIcon,
           ),
@@ -83,7 +80,6 @@ class _CustomMapViewState extends State<CustomMapView> {
             markerId: MarkerId('userMarker'),
             position: widget.userLivePosition!,
             draggable: false,
-            flat: true,
             anchor: Offset(0.5, 0.5),
             icon: MapMarkersIcons.locationCircleMarkerIcon,
           ),
