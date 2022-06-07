@@ -64,7 +64,12 @@ class DriverHomeScreen extends StatelessWidget {
                         horizontal: 3.w,
                       ),
                       child: CustomButton(
-                        text: 'You\'re delivering a package, continue delivery',
+                        text:
+                            '  You are delivering a package, continue to delivery  ',
+                        textStyle: TextStyle(
+                          fontSize: 11.sp,
+                          color: Colors.black54,
+                        ),
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => DeliveryScreen(),

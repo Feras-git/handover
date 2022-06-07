@@ -7,6 +7,8 @@ import 'package:handover/core/constants.dart';
 class MapMarkersIcons {
   static late BitmapDescriptor locationCircleMarkerIcon;
   static late BitmapDescriptor deliveryMarkerIcon;
+  static late BitmapDescriptor customerMarkerIcon;
+  static late BitmapDescriptor pickUpMarkerIcon;
 
   static Future configure() async {
     await Future.wait([
@@ -14,8 +16,14 @@ class MapMarkersIcons {
       _getBitmapDescriptor(imageAssetPath: kLocationCircleImagePath)
           .then((value) => locationCircleMarkerIcon = value),
       // delivery icon
-      _getBitmapDescriptor(imageAssetPath: kDeliveryImagePath)
+      _getBitmapDescriptor(imageAssetPath: kDeliveryMarkerPath)
           .then((value) => deliveryMarkerIcon = value),
+      // customer icon
+      _getBitmapDescriptor(imageAssetPath: kCustomerMarkerPath)
+          .then((value) => customerMarkerIcon = value),
+      // delivery icon
+      _getBitmapDescriptor(imageAssetPath: kPickUpMarkerPath)
+          .then((value) => pickUpMarkerIcon = value),
     ]);
   }
 

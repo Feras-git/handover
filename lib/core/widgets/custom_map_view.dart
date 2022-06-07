@@ -58,12 +58,14 @@ class _CustomMapViewState extends State<CustomMapView> {
           markerId: MarkerId('pickUpMarker'),
           position: widget.pickupPosition,
           draggable: false,
+          icon: MapMarkersIcons.pickUpMarkerIcon,
         ),
         // Customer position marker
         Marker(
           markerId: MarkerId('customerMarker'),
           position: widget.customerPosition,
           draggable: false,
+          icon: MapMarkersIcons.customerMarkerIcon,
         ),
         // delivery (driver) marker
         if (widget.driverPosition != null)

@@ -88,7 +88,11 @@ class CustomerHomeScreen extends StatelessWidget {
                   CustomButton(
                     text: !_hasCurrentOrder
                         ? '  Get my package to my location  '
-                        : ' You already have an order, track it! ',
+                        : '  You already have an order, track it!  ',
+                    textStyle: TextStyle(
+                      fontSize: 11.sp,
+                      color: Colors.black54,
+                    ),
                     onPressed: () async {
                       if (!_hasCurrentOrder) {
                         if (_selectedProduct == null) {
